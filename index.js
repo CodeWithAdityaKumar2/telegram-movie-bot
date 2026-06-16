@@ -30,29 +30,31 @@ const client = new TelegramClient(
 
 app.post("/forward", async (req, res) => {
   try {
-    const { sourceChannel, targetChannel, messageId } =
-      req.body;
-
-    const msg = await client.getMessages(
+    const {
       sourceChannel,
-      {
-        ids: messageId,
-      }
-    );
+      targetChannel,
+      messageId
+    } = req.body;
+
+    console.log(req.body);
 
     await client.forwardMessages(
       targetChannel,
       {
-        messages: [msg],
+        fromPeer: sourceChannel,
+        messages: [Number(messageId)]
       }
     );
 
     res.json({
-      success: true,
+      success: true
     });
+
   } catch (e) {
+    console.error(e);
+
     res.status(500).json({
-      error: e.message,
+      error: e.message
     });
   }
 });
